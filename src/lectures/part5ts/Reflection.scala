@@ -58,4 +58,41 @@ object Reflection extends App {
   def processList(list: List[Int]): Int = 42
   //def processList(list: List[String]): Int = 45
 
+  // TypeTags
+
+  // 0 - import
+  import ru._
+
+  // 1 - creating a TypeTag "manually"
+  val ttag = typeTag[Person]
+  println("ttag " + ttag.tpe)
+
+  class MyMap[K, V]
+
+  // 2 - pass TypeTags as implicit parameters
+  def getTypeArguments[T](value: T)(implicit typeTag: TypeTag[T]) = typeTag.tpe match {
+    case TypeRef(_, _, typeArguments) => typeArguments
+    case _ => List()
+  }
+
+  val myMap = new MyMap[Int, String]
+  val typeArgs = getTypeArguments(myMap) // (typeTag: TypeTag[MyMap[Int, String]])
+  println(typeArgs)
+
+  def isSubtype[A, B](implicit ttA: TypeTag[A], ttB: TypeTag[B]): Boolean = {
+    ttA.tpe <:< ttB.tpe
+  }
+
+  class Animal
+  class Dog extends Animal
+  println(isSubtype[Dog, Animal]) // should return true
+
+  // I have an instance
+  // 3 - method symbol
+  val anotherMethodSymbol = typeTag[Person].tpe.decl(ru.TermName(methodName)).asMethod
+  // 4 - reflect the method = can DO things
+  val sameMethod = reflected.reflectMethod(methodSymbol)
+  // 5 - invoke the method
+  method.apply()
+
 }
