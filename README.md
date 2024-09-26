@@ -1,2 +1,2 @@
 # scala2-advanced
-Scala 2 Advanced coursework from RockTheJvm
+Scala 2 Advanced coursework code from RockTheJvm
